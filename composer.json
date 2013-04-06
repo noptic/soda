@@ -1,0 +1,23 @@
+{
+    "name": "dalia-it/soda",
+    "minimum-stability": "dev",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Oliver Anan",
+            "email": "oliver@ananit.de"
+        }
+    ],
+    "autoload": {
+        "psr-0": {"daliaIT\\soda": "src/"}
+    },
+    "require": {
+        "symfony/yaml": "*",
+        "symfony/console": "*",
+        "dalia-it/rough": "*",
+        "vector-web/plinq": "v1.0.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    }
+}

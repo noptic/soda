@@ -1,0 +1,48 @@
+type: php.class
+tags:
+  author:   Oliver Anan <oliver@ananit.de>
+  license:  MIT
+description: |
+  Base class for soda code generators.
+  Provides methods for buffered text generation.
+
+properties:
+  protected:
+    indent = '    ': string used for 1 level of indent.
+    buffer = array():     string stores output during code generation.
+
+methods:
+  public:     
+      write ($text=''): |
+        $this->buffer[] .= $text;
+        return $this;
+      
+      writeln ($text='', $indent=''): |
+        if($text === '' || $text === null):
+            $this->write(PHP_EOL);
+            return $this;
+        endif;
+        $text = \rtrim($text);
+        foreach (\explode("\n",$text) as $line):
+            if($indent) $line = str_repeat($this->indent, $indent).$line;
+            $this->write($line.PHP_EOL);
+        endforeach;
+        return $this;
+        
+      setIndent ($value): |
+        * @return this
+        $this->indent = $value;
+        return $this;
+        
+      flush (): | 
+        * get the content of the write buffer and empty it. 
+        * @return string
+        $result = \implode('',$this->buffer);
+        $this->buffer = array();
+        return $result;
+        
+      getIndent (): |
+        * get the string representing 1 level of indent
+        * @return string
+        return $this->indent;
+        

@@ -1,0 +1,39 @@
+type: php.class
+tags:
+  author: Oliver Anan <oliver@ananit.de>
+use:
+  - RecursiveIteratorIterator
+  - RecursiveDirectoryIterator
+  - YaLinqo\Enumerable
+properties:
+      
+methods:
+  public:
+    getCanFiles ($directorys): |
+      * return array
+      $directorys = (array) $directorys;
+      $files = array();
+      foreach($directorys as $directory):
+        $directory = realpath($directory);
+        $pathLength = strlen($directory);
+        $files[$directory] = array();
+        $objects = new RecursiveIteratorIterator(
+          new RecursiveDirectoryIterator($directory), 
+          RecursiveIteratorIterator::SELF_FIRST
+        );
+        foreach($objects as $name => $object):
+            if(substr($name,-4) === '.can'):
+                $files[$directory][] = str_replace(
+                DIRECTORY_SEPARATOR,
+                '/',
+                substr($name, $pathLength+1)
+                )."\n";
+            endif;
+        endforeach;
+      endforeach;
+      return $files;
+
+    buildIndex($directorys): |
+      $files = $this->getsodaFiles($directorys);
+      //YaLinqo\Enumerable::from($this->)$entities.where("$x->getType() == 'php.class'")
+

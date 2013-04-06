@@ -1,0 +1,54 @@
+type: php.class
+description: |
+            This is a sample soda class.
+            it Has some properties and methods but nothing really fancy
+use:        daliaIT\soda\Template
+extends:    Template
+implements: ISampleInterface
+tags:
+  author: Oliver Anan <oliver@ananit.de>
+  keyword: [sample, soda, class, test]
+properties:
+    private:
+        string:
+            hash:  a hash value of this object
+            salt:  used for hashing
+        intger:
+            id:    used for fast comparison
+    protected:
+        string:
+            buffer: stores output during rendering
+            indent: string used for 1 level of indent
+
+methods:
+    public:
+        integer:
+            getId (): |
+                return $this->id;
+        string:
+            getHash (): |
+                return $this->hash;
+
+            getSalt ():
+                return $this->salt;
+            
+            flush (): |
+                $text = $this->buffer;
+                $this->buffer = '';
+                return $text;
+
+        this:
+            write ($text): |
+                 $this->buffer .= $text;
+                 return $this;
+
+            witeln ($text, $indent=0): |
+                foreach (explode("\n",$text) as $line):
+                    if($indent) $line = str_repeat($this->indent, $indent).$line;
+                    $this->write($line.PHP_EOL);
+                endforeach;
+                return $this;
+
+            setSalt ($salt): |
+                $this->salt = $salt;
+                return $this;
