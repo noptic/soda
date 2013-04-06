@@ -22,7 +22,7 @@ methods:
           RecursiveIteratorIterator::SELF_FIRST
         );
         foreach($objects as $name => $object):
-            if(substr($name,-4) === '.can'):
+            if(substr($name,-5) === '.yaml'):
                 $files[$directory][] = str_replace(
                 DIRECTORY_SEPARATOR,
                 '/',

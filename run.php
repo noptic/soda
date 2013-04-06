@@ -2,7 +2,7 @@
 require __DIR__.'/vendor/autoload.php';
 $parser =  new Symfony\Component\Yaml\Parser();
 $yaml = $parser->parse(file_get_contents(
-        __DIR__.'/soda/daliaIT/soda/Indexer.can'
+        __DIR__.'/soda/daliaIT/soda/Indexer.yaml'
  ));
 $yaml['namespace'] = "daliaIT\soda";
 $yaml['name'] = "Indexer";
