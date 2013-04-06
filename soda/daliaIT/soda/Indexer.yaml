@@ -1,4 +1,4 @@
-type: php.class
+type: php\class
 tags:
   author: Oliver Anan <oliver@ananit.de>
 use:
@@ -14,11 +14,11 @@ methods:
       $directorys = (array) $directorys;
       $files = array();
       foreach($directorys as $directory):
-        $directory = realpath($directory);
-        $pathLength = strlen($directory);
+        $realDirectory = realpath($directory);
+        $pathLength = strlen($realDirectory);
         $files[$directory] = array();
         $objects = new RecursiveIteratorIterator(
-          new RecursiveDirectoryIterator($directory), 
+          new RecursiveDirectoryIterator($realDirectory), 
           RecursiveIteratorIterator::SELF_FIRST
         );
         foreach($objects as $name => $object):
@@ -34,6 +34,6 @@ methods:
       return $files;
 
     buildIndex($directorys): |
-      $files = $this->getsodaFiles($directorys);
-      //YaLinqo\Enumerable::from($this->)$entities.where("$x->getType() == 'php.class'")
+      $files = $this->getCanFiles($directorys);
+      
 
