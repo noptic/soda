@@ -32,7 +32,7 @@ class ClassTemplate extends Template{
         if(isset($data['use']) && $data['use']){
             $data['use'] = (array) $data['use'];
             sort($data['use']);
-            $this->writeln('use '.implode(','.PHP_EOL.'    ',$data['use']).';');
+            $this->writeln('use '.implode(",\n    ",$data['use']).';');
         }
         return $this;
     }
@@ -118,7 +118,7 @@ class ClassTemplate extends Template{
     }
     
     public function writeMethods($data){
-        if(! (isset($data['methods'])) && $data['methods']) return $this;
+        if( (!isset($data['methods'])) || !$data['methods']) return $this;
         \ksort($data['methods']);
         foreach($data['methods'] as $prefix => $methods)
             ksort($methods);

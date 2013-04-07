@@ -1,19 +1,38 @@
-type: php\class
+type: php.Class
+description: |
+  Scans source directorys and creates a index.
+  The index contains: 
+  
 tags:
   author: Oliver Anan <oliver@ananit.de>
 use:
   - RecursiveIteratorIterator
   - RecursiveDirectoryIterator
+  - LogicExcption
+  - RuntimeException
   - YaLinqo\Enumerable
+  - Symfony\Component\Yaml\Parser
+  
 properties:
-      
+  protected:
+    parser: >
+      Symfony\Component\Yaml\Parser 
+      reads can files to extract meta data
+    
+    indexFilePattern = '|\.yaml$|': >
+      string 
+      used as regex pattern to detrminate if 
+      a file should be indexed 
 methods:
   public:
+    __construct(): |
+      $this->parser = new Parser();
+      
     getCanFiles ($directorys): |
       * return array
       $directorys = (array) $directorys;
       $files = array();
-      foreach($directorys as $directory):
+      foreach($directorys as $directory){
         $realDirectory = realpath($directory);
         $pathLength = strlen($realDirectory);
         $files[$directory] = array();
@@ -21,19 +40,63 @@ methods:
           new RecursiveDirectoryIterator($realDirectory), 
           RecursiveIteratorIterator::SELF_FIRST
         );
-        foreach($objects as $name => $object):
-            if(substr($name,-5) === '.yaml'):
-                $files[$directory][] = str_replace(
-                DIRECTORY_SEPARATOR,
-                '/',
-                substr($name, $pathLength+1)
-                )."\n";
-            endif;
-        endforeach;
-      endforeach;
+        foreach($objects as $name => $object){
+          $match = preg_match($this->indexFilePattern,$name);
+          if ($match === false){ 
+            throw new LogicException(
+              "regex error, please check your pattern: "
+              .$this->indexFilePattern
+            );
+          }
+          if($match){
+            $files[$directory][] = str_replace(
+            DIRECTORY_SEPARATOR,
+            '/',
+            substr($name, $pathLength+1)
+            );
+          }
+        }
+      }
       return $files;
 
     buildIndex($directorys): |
-      $files = $this->getCanFiles($directorys);
-      
+      $index = array();
+      $filesPerDirectory = $this->getCanFiles($directorys);
+      foreach ($filesPerDirectory as $directory => $files){
+        foreach($files as $file){
+          $path = "$directory/$file";
+          if(! is_readable($path) ) throw new RuntimeException(
+            "Source file is not readable: '$path'"
+          );
+          $rawContents = file_get_contents($path);
+          $can = $this->parser->parse( $rawContents );
+          if(! isset($can['type']) ) throw new RuntimeException(
+            "Missing type information: $path"
+          );
+          if (isset($can['name'])){
+            $canName = $can['name'];
+          } else {
+            $canName = substr(
+              str_replace('/','.',$file),
+              0,
+              strrpos($file,'.')
+            );
+          }
+          $nameParts = explode('.',$canName);
+          $shortName = array_pop($nameParts);
+          $namespace = implode('\\',$nameParts);
+          $index[$canName] = array(
+            'type'      => $can['type'],
+            'path'      => $path,
+            'hash'      => md5(serialize($can)),
+            'namespace' => $namespace,
+            'name'      => $shortName
+          );
+        }
+      }
+      return $index;
 
+  protected:    
+    normalizeMethodName:
+    normalizePropertyName:
+    
