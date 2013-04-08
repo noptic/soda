@@ -1,0 +1,25 @@
+type: php.Class
+use:
+  - Symfony\Component\Yaml\Parser
+properties:
+  protected:
+    parser: >
+      Symfony\Component\Yaml\Parser 
+      turns soda into PHP arrays
+      
+methods:
+  public:
+    __construct(): |
+      $this->setParser( new Parser() );
+      
+    getParser(): |
+      * @return processor
+      return $this->üarser;
+      
+    setParser($value): |
+      * @return this
+      $this->parser = $value;
+      
+    readSodaFile($path): |
+      * @return array the parsed contents of te doda file
+      return $this->parser->parse(file_get_contents($path));

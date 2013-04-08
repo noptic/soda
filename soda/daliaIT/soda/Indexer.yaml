@@ -2,7 +2,7 @@ type: php.Class
 description: |
   Scans source directorys and creates a index.
   The index contains: 
-  
+extends: Processor
 tags:
   author: Oliver Anan <oliver@ananit.de>
 use:
@@ -11,23 +11,15 @@ use:
   - LogicExcption
   - RuntimeException
   - YaLinqo\Enumerable
-  - Symfony\Component\Yaml\Parser
   
 properties:
   protected:
-    parser: >
-      Symfony\Component\Yaml\Parser 
-      reads can files to extract meta data
-    
     indexFilePattern = '|\.yaml$|': >
       string 
       used as regex pattern to detrminate if 
       a file should be indexed 
 methods:
   public:
-    __construct(): |
-      $this->parser = new Parser();
-      
     getCanFiles ($directorys): |
       * return array
       $directorys = (array) $directorys;

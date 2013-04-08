@@ -4,7 +4,6 @@ use LogicExcption,
     RecursiveDirectoryIterator,
     RecursiveIteratorIterator,
     RuntimeException,
-    Symfony\Component\Yaml\Parser,
     YaLinqo\Enumerable;
 /**
  * Scans source directorys and creates a index.
@@ -12,20 +11,11 @@ use LogicExcption,
  * @author Oliver Anan <oliver@ananit.de>
  */
 
-class Indexer {
+class Indexer extends Processor {
     /**
      * @var string  used as regex pattern to detrminate if  a file should be indexed
      */
     protected $indexFilePattern = '|\.yaml$|';
-
-    /**
-     * @var Symfony\Component\Yaml\Parser  reads can files to extract meta data
-     */
-    protected $parser;
-
-    public function __construct(){
-        $this->parser = new Parser();
-    }
 
     public function buildIndex($directorys){
         $index = array();
