@@ -1,0 +1,68 @@
+type: php.Class
+use:
+  - daliaIT\soda\Template
+extends: Template
+methods:
+  public:
+    render($data): |
+      * @return string
+      return $this
+        ->writeOpenTag($data)
+        ->writeNamespace($data)
+        ->writeUse($data)
+        ->writeDescription($data)
+        ->writeName($data)
+        ->writeBody($data)
+        ->flush();
+    
+    writeDocComment($text='',$indent=0): |
+        $text = \str_replace("\n", "\n * ", trim($text));
+        $this->writeln("/**\n * $text\n */",$indent);
+        return $this;
+    
+    writeOpenTag($data): |
+      * @return this
+      //prevent following code from being parse as php
+      $tag = implode('',array('<','?','p','h','p'));
+      $this->write($tag."\n");
+      return $this;
+      
+    writeNamespace($data): |
+      * @return this
+      if(isset($data['namespace'])) 
+        $this->writeln("namespace {$data['namespace']};");
+      return $this;
+      
+    writeUse($data): |
+      * @return this
+      if(isset($data['use']) && $data['use']){
+        $data['use'] = (array) $data['use'];
+        sort($data['use']);
+        $this->writeln('use '.implode(",\n    ",$data['use']).';');
+      }
+      return $this;
+        
+    writeDescription($data): |
+      * @return this
+      $text = '';
+        if(isset($data['description'])){
+          $text .= $data['description'];
+        }
+        if (isset($data['tags'])){
+          foreach ($data['tags'] as $name => $value):
+            $value = (array) $value;
+            sort($value);
+            foreach ($value as $valueMemebr):
+              $text .= "@$name $valueMemebr\n";
+            endforeach;
+          endforeach;
+        }
+        return $this->writeDocComment($text);
+        
+    writeName($data): |
+      * @return this
+      return $this;
+      
+    writeBody($data): |
+      * @return this
+      return $this;

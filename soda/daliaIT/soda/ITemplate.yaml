@@ -1,0 +1,21 @@
+type: php.Interface
+tags:
+  author:   Oliver Anan <oliver@ananit.de>
+  license:  MIT
+description: |
+  Base class for soda code generators.
+  Provides methods for buffered text generation.
+
+properties:
+  protected:
+    indent = '    ': string used for 1 level of indent.
+    buffer = array():     string stores output during code generation.
+
+methods:
+  public:     
+      write ($text=''): Add raw text to the templte output.        
+      writeln ($text='', $indent=''): "Add a indented line to the template Output"
+      setIndent ($value): "set the string which used to indent a text 1 level"  
+      flush (): "Get the output of the template and clear all buffers" 
+      getIndent (): "get the string which used to indent a text 1 level"
+        

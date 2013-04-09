@@ -23,11 +23,7 @@ class Indexer extends Processor {
         foreach ($filesPerDirectory as $directory => $files){
           foreach($files as $file){
             $path = "$directory/$file";
-            if(! is_readable($path) ) throw new RuntimeException(
-              "Source file is not readable: '$path'"
-            );
-            $rawContents = file_get_contents($path);
-            $can = $this->parser->parse( $rawContents );
+            $can = $this->readSodaFile($path);
             if(! isset($can['type']) ) throw new RuntimeException(
               "Missing type information: $path"
             );

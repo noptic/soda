@@ -1,0 +1,47 @@
+type: php.Class
+extends: PhpTemplate
+methods:
+  public:
+    writeName($data): |
+      * @return this
+      $this
+        ->writeln()
+        ->write("interface {$data['name']} ")
+        ->writeExtends($data);
+      return $this;
+      
+    writeBody($data): |
+      * @return this
+      $this
+        ->writeOpenBody($data)
+        ->writeMethods($data)
+        ->writeCloseBody($data);
+      return $this;
+
+    writeOpenBody($data): |
+        $this->writeln('{');
+        return $this;
+    
+    writeCloseBody($data): |
+        $this->writeln('}');
+        return $this;
+
+    writeMethods($data): |
+      if( (!isset($data['methods'])) || !$data['methods']) return $this;
+      \ksort($data['methods']);
+      foreach($data['methods'] as $prefix => $methods){
+        ksort($methods);
+        foreach ($methods as $declaration => $description){
+          $this->writeDocComment($description,1);
+          $this->writeln("$prefix function $declaration;",1);
+          $this->writeln();
+        }
+      }
+      return $this;
+    
+    writeExtends($data): |
+      if(isset($data['extends'])&& $data['extends'])
+        $this->write("extends {$data['extends']} ");
+      return $this;
+    
+    

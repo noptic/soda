@@ -1,6 +1,8 @@
 <?php
 namespace daliaIT\soda;
-use Symfony\Component\Yaml\Parser;
+use Exception,
+    Symfony\Component\Yaml\Exception\ParseException,
+    Symfony\Component\Yaml\Parser;
 /**
  * @author Oliver Anan <oliver@ananit.de>
  * @package dalia-it/soda
@@ -28,7 +30,13 @@ class Processor {
      * @return array the parsed contents of te doda file
      */
     public function readSodaFile($path){
-        return $this->parser->parse(file_get_contents($path));
+        try{
+          return $this->parser->parse(file_get_contents($path));
+        }
+        catch(Exception $e){
+          echo 'foo';
+          //throw new Exception("Parsing soda file failed: $path",0,$e);
+        }
     }
 
     /**

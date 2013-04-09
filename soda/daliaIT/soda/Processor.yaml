@@ -1,6 +1,8 @@
 type: php.Class
 use:
+  - Exception
   - Symfony\Component\Yaml\Parser
+  - Symfony\Component\Yaml\Exception\ParseException
 properties:
   protected:
     parser: >
@@ -20,6 +22,12 @@ methods:
       * @return this
       $this->parser = $value;
       
-    readSodaFile($path): |
+    readSodaFile($path): | 
       * @return array the parsed contents of te doda file
-      return $this->parser->parse(file_get_contents($path));
+      try{
+        return $this->parser->parse(file_get_contents($path));
+      }
+      catch(Exception $e){
+        echo 'foo';
+        //throw new Exception("Parsing soda file failed: $path",0,$e);
+      }
